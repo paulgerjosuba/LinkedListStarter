@@ -13,6 +13,10 @@ public class MyLinkedList<E> implements LinkedListInterface<E> {
         return null;
     }
 
+    public void remove (int index){
+        //TODO: write your implementation
+    }
+
     public int size(){
         //TODO: write your implementation
         return 0;
