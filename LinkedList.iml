@@ -1,11 +1,132 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<module type="JAVA_MODULE" version="4">
-  <component name="NewModuleRootManager" inherit-compiler-output="true">
-    <exclude-output />
-    <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
-    </content>
-    <orderEntry type="inheritedJdk" />
-    <orderEntry type="sourceFolder" forTests="false" />
-  </component>
-</module>
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.TestWatcher;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+// Class for the list
+class MyList<T> {
+    private final List<T> list = new ArrayList<>();
+
+    public void add(T element) {
+        list.add(element);
+    }
+
+    public void clear() {
+        list.clear();
+    }
+
+    public T get(int index) {
+        return list.get(index);
+    }
+
+    public T remove(int index) {
+        return list.remove(index);
+    }
+
+    public int size() {
+        return list.size();
+    }
+
+    public boolean isEmpty() {
+        return list.isEmpty();
+    }
+}
+
+// Custom TestWatcher to track and format test results
+class CustomTestWatcher implements TestWatcher {
+    private static int totalTests = 0;
+    private static int passedTests = 0;
+    private static int failedTests = 0;
+
+    private static final List<String> results = new ArrayList<>();
+
+    @Override
+    public void testSuccessful(ExtensionContext context) {
+        results.add(String.format("Test Name: %s          Status: PASSED", context.getDisplayName()));
+        passedTests++;
+        totalTests++;
+    }
+
+    @Override
+    public void testFailed(ExtensionContext context, Throwable cause) {
+        results.add(String.format("Test Name: %s          Status: FAILED", context.getDisplayName()));
+        failedTests++;
+        totalTests++;
+    }
+
+    @Override
+    public void testAborted(ExtensionContext context, Throwable cause) {
+        // Not needed for this case
+    }
+
+    @Override
+    public void testDisabled(ExtensionContext context, Optional<String> reason) {
+        // Not needed for this case
+    }
+
+    // Print the summary after all tests
+    @AfterAll
+    public static void printSummary() {
+        System.out.println("Test Suite:");
+        System.out.println("----------------------------------");
+        results.forEach(System.out::println);
+        System.out.println("----------------------------------");
+        System.out.println("Total Tests: " + totalTests + "  |  Passed: " + passedTests + "  |  Failed: " + failedTests);
+    }
+}
+
+// Main Test Class
+@ExtendWith(CustomTestWatcher.class)
+public class MyListTest {
+
+    private MyList<Integer> myList;
+
+    @BeforeEach
+    public void setUp() {
+        myList = new MyList<>();
+    }
+
+    @Test
+    public void testAdd() {
+        myList.add(1);
+        Assertions.assertEquals(1, myList.size());
+    }
+
+    @Test
+    public void testClear() {
+        myList.add(1);
+        myList.clear();
+        Assertions.assertEquals(0, myList.size());
+    }
+
+    @Test
+    public void testGet() {
+        myList.add(10);
+        Assertions.assertEquals(10, myList.get(0));
+    }
+
+    @Test
+    public void testRemove() {
+        myList.add(20);
+        int removedElement = myList.remove(0);
+        Assertions.assertEquals(20, removedElement);
+    }
+
+    @Test
+    public void testSize() {
+        Assertions.assertEquals(0, myList.size());
+        myList.add(1);
+        Assertions.assertEquals(1, myList.size());
+    }
+
+    @Test
+    public void testIsEmpty() {
+        Assertions.assertTrue(myList.isEmpty());
+        myList.add(1);
+        Assertions.assertFalse(myList.isEmpty());
+    }
+}
