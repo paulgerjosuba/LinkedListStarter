@@ -1,11 +1,95 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<module type="JAVA_MODULE" version="4">
-  <component name="NewModuleRootManager" inherit-compiler-output="true">
-    <exclude-output />
-    <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
-    </content>
-    <orderEntry type="inheritedJdk" />
-    <orderEntry type="sourceFolder" forTests="false" />
-  </component>
-</module>
+import java.util.ArrayList;
+
+public class MyList<T> {
+    private ArrayList<T> list;
+
+    public MyList() {
+        list = new ArrayList<>();
+    }
+
+    // Adds an element to the list
+    public void add(T element) {
+        list.add(element);
+    }
+
+    // Clears the list
+    public void clear() {
+        list.clear();
+    }
+
+    // Returns the element at the specified index
+    public T get(int index) {
+        return list.get(index);
+    }
+
+    // Removes the element at the specified index
+    public T remove(int index) {
+        return list.remove(index);
+    }
+
+    // Returns the size of the list
+    public int size() {
+        return list.size();
+    }
+
+    // Checks if the list is empty
+    public boolean isEmpty() {
+        return list.isEmpty();
+    }
+}
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+public class MyListTest {
+    private MyList<Integer> myList;
+
+    @BeforeEach
+    public void setUp() {
+        myList = new MyList<>();
+    }
+
+    @Test
+    public void testAdd() {
+        myList.add(1);
+        assertEquals(1, myList.size());
+        assertEquals(1, myList.get(0));
+    }
+
+    @Test
+    public void testClear() {
+        myList.add(1);
+        myList.clear();
+        assertEquals(0, myList.size());
+        assertTrue(myList.isEmpty());
+    }
+
+    @Test
+    public void testGet() {
+        myList.add(10);
+        assertEquals(10, myList.get(0));
+    }
+
+    @Test
+    public void testRemove() {
+        myList.add(20);
+        int removedElement = myList.remove(0);
+        assertEquals(20, removedElement);
+        assertTrue(myList.isEmpty());
+    }
+
+    @Test
+    public void testSize() {
+        assertEquals(0, myList.size());
+        myList.add(1);
+        assertEquals(1, myList.size());
+    }
+
+    @Test
+    public void testIsEmpty() {
+        assertTrue(myList.isEmpty());
+        myList.add(1);
+        assertFalse(myList.isEmpty());
+    }
+}
